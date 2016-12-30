@@ -1,0 +1,603 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="FulfillmentRequestSubmissionResource"
+    targetNamespace="urn:WarehouseFS-1.0"
+    elementFormDefault="qualified"
+    xmlns="urn:WarehouseFS-1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Errors">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Error" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Code" type="xs:int" />
+              <xs:element name="Message" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FulfillmentRequestSubmission">
+    <xs:annotation>
+      <xs:documentation>
+        Represents the submission of a fulfillment request via the API. Note
+        that a fulfillment request submission is distinct from the actual
+        fulfillment request, if any, that is generated as a result of the
+        submission.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MerchantCode">
+          <xs:annotation>
+            <xs:documentation>
+              The merchant code assigned to the merchant account for whom this
+              fulfillment request submission and its resulting fulfillment
+              request should belong to.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:minLength value="1" />
+              <xs:maxLength value="8" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="MerchantIdentifier">
+          <xs:annotation>
+            <xs:documentation>
+              The merchant's identifier for the fulfillment request. This is
+              usually the order number in the merchant's e-commerce system.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:minLength value="1" />
+              <xs:maxLength value="50" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="CustomerIdentifier" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>
+              The customer's identifier for the fulfillment request. This is
+              usually the customer's purchase order number in the customer's
+              system. It is optional. WFS does not use this value except that it
+              prints on some box labels and packing slips for the customer's
+              convenience.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:minLength value="0" />
+              <xs:maxLength value="50" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="BillOfLadingNumber" minOccurs="0" maxOccurs="1">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:minLength value="0" />
+              <xs:maxLength value="50" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="MasterBillOfLadingNumber" minOccurs="0" maxOccurs="1">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:minLength value="0" />
+              <xs:maxLength value="50" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="CustomerMessage" minOccurs="0" maxOccurs="1" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              The customer message is an optional note that is printed on
+              receipts or packing slips. The most common use is a gift message
+              that the customer is allowed to enter during checkout.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Currency" type="Currency">
+          <xs:annotation>
+            <xs:documentation>
+              The base currency of the fulfillment request. Currently, only USD
+              is supported.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="EmailAddress" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              The e-mail address that is associated with the shipping address.
+              Optional.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:minLength value="0" />
+              <xs:maxLength value="255" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="Address" type="Address">
+          <xs:annotation>
+            <xs:documentation>
+              The shipping address for the fulfillment request.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Lines">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Line" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Item">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="MerchantIdentifier">
+                            <xs:annotation>
+                              <xs:documentation>
+                                The merchant's identifier for the item as stored
+                                in the WFS system.
+                              </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                              <xs:restriction base="xs:string">
+                                <xs:minLength value="1" />
+                                <xs:maxLength value="50" />
+                              </xs:restriction>
+                            </xs:simpleType>
+                          </xs:element>
+                          <xs:element name="Modifications" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:sequence minOccurs="0" maxOccurs="3">
+                                <xs:element name="Modification" type="xs:string" />
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="StoredValue" minOccurs="0" maxOccurs="1" type="MonetaryAmount" />
+                          <xs:element name="GiftBox" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Quantity" type="xs:unsignedInt" />
+                    <xs:element name="UnitPrice" type="MonetaryAmount" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="RequestedDocuments" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="RequestedDocument" minOccurs="0" maxOccurs="unbounded" type="FulfillmentRequestDocumentType" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="MerchantReturnProfile" minOccurs="0" maxOccurs="1" type="xs:string" />
+        <xs:element name="PackingSlipTemplate" minOccurs="0" maxOccurs="1" type="xs:string" />
+        <xs:element name="UccLabelTemplate" minOccurs="0" maxOccurs="1" type="xs:string" />
+        <xs:element name="LabelReferences" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="LabelReference" minOccurs="0" maxOccurs="2" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PrivacyLabel" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+        <xs:element name="GiftWrap" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+        <xs:element name="ShipmentConfirmationEmail" minOccurs="0" maxOccurs="1" type="xs:boolean" />
+        <xs:element name="ShippingMethod" type="xs:string" />
+        <xs:element name="ShippingChargesPayer" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Kind" type="xs:string" />
+              <xs:element name="Carrier" type="xs:string" />
+              <xs:element name="AccountNo" type="xs:string" />
+              <xs:element name="PostalCode" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="TaxChargesPayer" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Kind" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ReturnLabel" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CarrierMethod" type="xs:string" />
+              <xs:element name="ReturnChargesPayer" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Kind" type="xs:string" />
+                    <xs:element name="Carrier" type="xs:string" />
+                    <xs:element name="AccountNo" type="xs:string" />
+                    <xs:element name="PostalCode" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Discount" type="MonetaryAmount" />
+        <xs:element name="Tax" type="MonetaryAmount" />
+        <xs:element name="Shipping" type="MonetaryAmount" />
+        <xs:element name="RequestMetadata" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Metadata" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Name" type="xs:string" />
+                    <xs:element name="Value" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="test" type="xs:boolean" use="optional">
+        <xs:annotation>
+          <xs:documentation>
+            Indicates that the fulfillment request submission (and its resulting fulfillment
+            request, if any) should be considered a test request. If the request passes the
+            validation process, then it will be automatically canceled and not fulfilled if
+            the test flag is set. The default value is false. There is no charge for using the
+            test flag.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Inventories">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Inventory" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Item">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="MerchantIdentifier" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Quantities">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="QuantityOnHand" type="xs:unsignedInt" />
+                    <xs:element name="QuantityReserved" type="xs:unsignedInt" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OutboundShipments">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="OutboundShipment" type="OutboundShipment" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ShippingRateQuote">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ShippingMethod" type="xs:string" />
+        <xs:element name="Country">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="^[A-Z]{2}$" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="PostalCode">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:minLength value="1" />
+              <xs:maxLength value="30" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="Weight" type="Weight" />
+        <xs:element name="Value" type="MonetaryAmount" />
+        <xs:element name="Price" type="MonetaryAmount" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="StockReservation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="State" type="StockReservationAcquisitionType" />
+        <xs:element name="Note" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              An optional, short note for convenience.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:minLength value="0" />
+              <xs:maxLength value="255" />
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="Lines">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Line" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Item">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="MerchantIdentifier">
+                            <xs:annotation>
+                              <xs:documentation>
+                                The merchant's identifier for the item as stored
+                                in the WFS system.
+                              </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                              <xs:restriction base="xs:string">
+                                <xs:minLength value="1" />
+                                <xs:maxLength value="50" />
+                              </xs:restriction>
+                            </xs:simpleType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Quantity" type="xs:unsignedInt" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Tracking">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Status" type="TrackingStatusType" />
+        <xs:element name="EstimatedDeliveryAtLocal" type="xs:dateTime" minOccurs="0" />
+        <xs:element name="Waypoints">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Waypoint" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="TransactedAtLocal" type="xs:dateTime" />
+                    <xs:element name="Location" type="xs:string" />
+                    <xs:element name="Note" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="Address">
+    <xs:sequence>
+      <xs:element name="Country">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Z]{2}" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="PersonalName" type="PersonalName" />
+      <xs:element name="Company" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="255" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="StreetLines">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="StreetLine" minOccurs="1" maxOccurs="2">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:minLength value="1" />
+                  <xs:maxLength value="255" />
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="CityOrTown">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="0" />
+            <xs:maxLength value="255" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="StateOrProvince">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="0" />
+            <xs:maxLength value="255" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="PostalCode">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="0" />
+            <xs:maxLength value="255" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Phone">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="0" />
+            <xs:maxLength value="30" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="type" type="AddressType" />
+  </xs:complexType>
+  <xs:simpleType name="AddressType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Shipping" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Currency">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AUD" />
+      <xs:enumeration value="USD" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="MonetaryAmount">
+    <xs:sequence>
+      <xs:element name="Amount" type="xs:decimal" />
+      <xs:element name="Currency" type="Currency" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OutboundShipment">
+    <xs:sequence>
+      <xs:element name="FulfillmentRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="MerchantIdentifier" type="xs:string" />
+            <xs:element name="WfsIdentifier" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="IdentificationNo" type="xs:string" />
+      <xs:element name="CarrierMethod">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Code" type="xs:string" />
+            <xs:element name="Name" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="PackagingType">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Code" type="xs:string" />
+            <xs:element name="Name" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ShippedAtUtc" type="xs:dateTime" />
+      <xs:element name="Cost" type="MonetaryAmount" />
+      <xs:element name="Weight" type="Weight" />
+      <xs:element name="MerchantPrepaid" type="xs:boolean" />
+      <xs:element name="Lines">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Line" minOccurs="1" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Item">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="MerchantIdentifier">
+                          <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                              <xs:minLength value="1" />
+                              <xs:maxLength value="50" />
+                            </xs:restriction>
+                          </xs:simpleType>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="Quantity" type="xs:unsignedInt" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PersonalName">
+    <xs:sequence>
+      <xs:element name="Prefix" minOccurs="0" type="xs:string" />
+      <xs:element name="First">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="255" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Middle" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="255" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Last">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="255" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Suffix" minOccurs="0" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="StockReservationAcquisitionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ACQUIRED" />
+      <xs:enumeration value="NOT-ACQUIRED" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="FulfillmentRequestDocumentType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RETAIL-RECEIPT" />
+      <xs:enumeration value="PACKING-SLIP" />
+      <xs:enumeration value="UCC-LABEL" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TrackingStatusType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="Pending" />
+      <xs:enumeration value="EnRoute" />
+      <xs:enumeration value="Delivered" />
+      <xs:enumeration value="Problem" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Weight">
+    <xs:sequence>
+      <xs:element name="Magnitude" type="xs:decimal" />
+      <xs:element name="Unit" type="WeightUnit" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="WeightUnit">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Pounds" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
