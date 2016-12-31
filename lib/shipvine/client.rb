@@ -7,11 +7,13 @@ module Shipvine
       @options = opts
     end
 
-    def request(method, resource, params = {})
+    def request(method, resource, params = {}, exclude_merchant_code: false)
       options = default_options.deep_merge(@options)
 
       options = if method == :get
-        options.merge(query: sanitize_query_parameters(params))
+        options.merge(query:
+          sanitize_query_parameters(params, exclude_merchant_code: exclude_merchant_code)
+        )
       else
         # TODO a sanitization method is needed here
         options.merge(body: params)
@@ -33,7 +35,7 @@ module Shipvine
 
     protected
 
-      def sanitize_query_parameters(params)
+      def sanitize_query_parameters(params, exclude_merchant_code: false)
         params = params.dup
 
         # TODO dynamic for input params hyphen/kebab case conversion
@@ -46,7 +48,13 @@ module Shipvine
           end
         end
 
-        { 'merchant-code' => Shipvine.merchant_code }.merge(params)
+        # NOTE some endpoints include the merchant code in the URL
+
+        if exclude_merchant_code
+          params
+        else
+          { 'merchant-code' => Shipvine.merchant_code }.merge(params)
+        end
       end
 
       def default_options
