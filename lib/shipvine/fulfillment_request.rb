@@ -16,12 +16,6 @@ module Shipvine
       }
     }.freeze
 
-    attr_reader :attributes
-
-    def initialize(attributes)
-      @attributes = attributes
-    end
-
     # TODO split classes into FulfillmentRequestSubmission and FulfillmentRequest?
 
     def self.get_shipvine_identifier(merchant_identifier)
@@ -46,6 +40,12 @@ module Shipvine
       )
 
       self.new(self.xml_to_hash(request.body))
+    end
+
+    attr_reader :attributes
+
+    def initialize(attributes)
+      @attributes = attributes
     end
 
     def metadata
