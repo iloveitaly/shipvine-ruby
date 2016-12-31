@@ -15,6 +15,9 @@ Shipvine.merchant_code = ENV['SHIPVINE_MERCHANT_CODE']
 # optional, if you want to disable XML validation
 Shipvine.validate_xml = false
 
+# optional
+Shipvine.testmode = true
+
 # optional, if you want to use HTTPParty's debugging
 if !Rails.env.production?
   Shipvine::Client.debug_output $stdout
@@ -24,7 +27,7 @@ end
 
 ## Usage
 
-An example fulfillment request:
+#### FulfillmentRequest
 
 ```ruby
 fulfillment_request = Shipvine::FulfillmentRequest.new(
@@ -53,16 +56,49 @@ fulfillment_request = Shipvine::FulfillmentRequest.new(
 fulfillment_request.create
 ```
 
-#### FulfillmentRequest
-
 * Discount, tax, and shipping is set to 0 USD. If you need to pass the actual values, submit a PR adding the feature to pass these values to the fulfillment request.
 * First name, last name is required. The company name is used if no name is defined.
 * `ShipVine::FulfillmentRequest#get_shipvine_identifier` will throw a 404 if the fulfillment request is not shipped
+
+#### Item & Item Group
+
+```ruby
+
+item_group = Shipvine::ItemGroup.new(
+  merchant_identifier: 'group-name',
+  name: 'group-name',
+  harmonized_code: '6105100000',
+  country_of_origin: 'US'
+)
+
+item_group.create
+
+item = Shipvine::Item.new(
+  group_merchant_identifier: 'group-name'
+  merchant_identifier: 'item-sku',
+  name: 'item-name',
+  harmonized_code: '6105100000',
+  country_of_origin: 'US',
+  weight: {
+    magnitude: 0.25,
+    unit: 'Pounds'
+  },
+  barcodes: {
+    barcode: 'UPC'
+  },
+  metadata: {
+    environment: Rails.env,
+  }
+)
+
+item.create
+```
 
 ## Development
 
 http://support.shipvine.com/articles/index
 
-TODO tests
+## Notes
 
-* `deep_compact!` is added to `Hash` and `Array`
+* `deep_compact!` is added to `Hash` and `Array`. This might cause issues if this gem is used in larger applications. Feel free to submit a PR :)
+* There are no tests for this gem. It is tested via integration tests in another project.
