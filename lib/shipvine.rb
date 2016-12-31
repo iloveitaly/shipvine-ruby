@@ -11,6 +11,8 @@ require 'shipvine/fulfillment_request'
 require 'shipvine/inbound_shipment'
 require 'shipvine/outbound_shipment'
 require 'shipvine/bill_of_lading'
+require 'shipvine/item'
+require 'shipvine/item_group'
 require 'shipvine/deep_compact'
 
 module Shipvine
