@@ -30,6 +30,7 @@ module Shipvine
       group_merchant_identifier = translated_payload.delete(:group_merchant_identifier)
 
       preprocess_metadata(translated_payload)
+      preprocess_variations(translated_payload)
 
       client.request(
         :put,
@@ -54,6 +55,16 @@ module Shipvine
 
       def validate_xml!(xml)
         # NOTE there is no XSD for item group!
+      end
+
+      def preprocess_variations(item_hash)
+        variations = item_hash.delete(:variations)
+
+        if variations
+          item_hash[:variations] = {
+            variation: variations
+          }
+        end
       end
 
       def preprocess_metadata(item_hash)
