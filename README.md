@@ -96,7 +96,8 @@ item.create
 
 ## Development
 
-http://support.shipvine.com/articles/index
+* ShipVine API docs: http://support.shipvine.com/articles/index
+* Harmonized Codes: https://uscensus.prod.3ceonline.com/
 
 ## Notes
 
